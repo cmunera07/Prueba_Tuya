@@ -18,7 +18,9 @@
 
 ## Punto 1 - Procesamiento de archivos HTML en Python
 
-[![Ejecutar en Colab](https://www.tensorflow.org/images/colab_logo_32px.png)](https://colab.research.google.com/drive/1XQI-AkGw5mrRU5Pk11P5kCffvKx46Gss?usp=sharing)
+Puedes ejecutar el código en Google Colab haciendo clic en el siguiente enlace:  
+[Abrir en Google Colab](https://colab.research.google.com/drive/1XQI-AkGw5mrRU5Pk11P5kCffvKx46Gss?usp=sharing)
+
 
 ### 1.1. Importación de librerias y conexión Google Drive
 
