@@ -122,8 +122,12 @@ Puedes ejecutar el código en Google Colab haciendo clic en el siguiente enlace:
 		print(resultado["fail"])
 
 ### 1.6. Referencias
+	
+	- Unipython. (s.f.). Analizar HTML con Python. Recuperado el 16 de abril de 2025, de https://unipython.com/analizar-html-con-python/
+	- Python-3.com. (s.f.). Cómo analizar HTML con Python. Recuperado el 16 de abril de 2025, de https://es.python-3.com/?p=971
 
-	- https://unipython.com/analizar-html-con-python/
+
+
 	
 	- https://es.python-3.com/?p=971
 
