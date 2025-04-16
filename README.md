@@ -37,6 +37,7 @@ C.[TIPO TARJETA], C.[FEÇHA_APERTURA_TARJETA], C.[ESTADO_TARJETA], CC.[NOMBRE_CA
 - Usa la función MAX() para obtener la última transacción dentro de cada categoría.
 - Aplica un ROW_NUMBER() para asignar un ranking basado en el número de transacciones.
 - Finalmente, filtra solo la primera categoría preferida (RANKING = 1).
+- La variable RANKING puede variar según se desee obtener las N primeras categorías preferidas en las que tuvo más transacciones
 
 
 WITH Preferencias AS (
@@ -60,7 +61,6 @@ FROM Preferencias
 WHERE RANKING = 1
 ;
 
-La variable RANKING puede variar según se desee obtener las N primeras categorías preferidas en las que tuvo más transacciones
 
 
 ### 2.3. ¿Qué hace esta consulta?
