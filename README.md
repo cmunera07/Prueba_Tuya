@@ -97,7 +97,7 @@ FROM Preferencias WHERE RANKING = 1
 * TABLA TEMPORAL: SaldosClasificados
 	- Clasifica cada cliente según su nivel de saldo.
 	- Genera una columna "nivel" que define en qué categoría de deuda se encuentra cada cliente.
-	- Asegura que cada mes está representado y verifica fecha de retiro.
+	- Asegura que cada mes el cliente esté representado y verifica fecha de retiro en caso de que aplique.
 	- Usa la función COALESCE() para asignar "N0" a clientes ausentes.
 	- Filtra clientes cuya fecha de retiro es anterior al corte de mes.
 
@@ -194,7 +194,7 @@ WITH SaldosClasificados AS (
 3.3. ¿Qué hace esta consulta?
 - Selecciona la racha más larga de un cliente.
 - Usa la función TOP N para devolver las n número de filas de acuerdo con el resultado esperado
-- Usa la función WITH TIES para incluir todas las filas que los mejores resultados de acuerdo con la función TOP N y siempre debe ir acompañada de ORDER BY
+- Usa la función WITH TIES para incluir todas las filas con los mejores resultados de acuerdo con la función TOP N y siempre debe ir acompañada de ORDER BY
 
 
 WITH SaldosClasificados AS (
