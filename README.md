@@ -1,13 +1,13 @@
-## Prueba_Tuya
+# Prueba_Tuya
 
-# Punto 2 -  Base BD
-/*
+### Punto 2 -  Base BD
+
 ¿Qué hace esta consulta?
 - Unir las tablas TRANSACCIONES, CLIENTES y CATEGORIAS_CONSUMO.
 - Cuenta el número total de transacciones por categoría para cada cliente.
 - Obtiene la última fecha de transacción por categoría.
 - Agrupa los datos por cliente y categoría.
-*/
+
 
 SELECT 
     C.[NOMBRE],
