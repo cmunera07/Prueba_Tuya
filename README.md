@@ -50,8 +50,8 @@ WITH Preferencias AS (
 			FROM [PRUEBA_TUYA].[dbo].[TRANSACCIONES$] T
 			JOIN [PRUEBA_TUYA].[dbo].[CLIENTES$] C ON T.[IDENTIFICACION] = C.[IDENTIFICACIÓN]
 			JOIN [PRUEBA_TUYA].[dbo].[CATEGORIAS_CONSUMO$] CC ON T.[CODIGO_CATEGORIA] = CC.[CODIGO_CATEGORIA]
-						GROUP BY C.[NOMBRE], C.[IDENTIFICACIÓN], C.[TIPO_DOCUMENTO], CC.[NOMBRE_CATEGORIA], T.[CODIGO_CATEGORIA]
-						)
+			GROUP BY C.[NOMBRE], C.[IDENTIFICACIÓN], C.[TIPO_DOCUMENTO], CC.[NOMBRE_CATEGORIA], T.[CODIGO_CATEGORIA]
+			)
 SELECT 
 * 
 FROM Preferencias 
@@ -67,21 +67,21 @@ La variable RANKING puede variar según se desee obtener las N primeras categor�
   
 
 WITH Preferencias AS (
-						SELECT 
-							C.[NOMBRE],
-							C.[IDENTIFICACIÓN],
-							C.[TIPO_DOCUMENTO],
-							CC.[NOMBRE_CATEGORIA],
-							T.[CODIGO_CATEGORIA],
-							COUNT(T.[ID_TRANSACCION]) AS TOTAL_TRANSACCIONES,
-							MAX(T.[FECHA_TRANSACCION]) AS ULTIMA_TRANSACCION,
-							ROW_NUMBER() OVER (PARTITION BY C.[IDENTIFICACIÓN] ORDER BY COUNT(T.[ID_TRANSACCION]) DESC) AS RANKING
-						FROM [PRUEBA_TUYA].[dbo].[TRANSACCIONES$] T
-						JOIN [PRUEBA_TUYA].[dbo].[CLIENTES$] C ON T.[IDENTIFICACION] = C.[IDENTIFICACIÓN]
-						JOIN [PRUEBA_TUYA].[dbo].[CATEGORIAS_CONSUMO$] CC ON T.[CODIGO_CATEGORIA] = CC.[CODIGO_CATEGORIA]
-						WHERE T.[FECHA_TRANSACCION] BETWEEN '2023-01-01' AND '2023-03-31'
-						GROUP BY C.[NOMBRE], C.[IDENTIFICACIÓN], C.[TIPO_DOCUMENTO], CC.[NOMBRE_CATEGORIA], T.[CODIGO_CATEGORIA]
-					)
+			SELECT 
+				C.[NOMBRE],
+				C.[IDENTIFICACIÓN],
+				C.[TIPO_DOCUMENTO],
+				CC.[NOMBRE_CATEGORIA],
+				T.[CODIGO_CATEGORIA],
+				COUNT(T.[ID_TRANSACCION]) AS TOTAL_TRANSACCIONES,
+				MAX(T.[FECHA_TRANSACCION]) AS ULTIMA_TRANSACCION,
+				ROW_NUMBER() OVER (PARTITION BY C.[IDENTIFICACIÓN] ORDER BY COUNT(T.[ID_TRANSACCION]) DESC) AS RANKING
+			FROM [PRUEBA_TUYA].[dbo].[TRANSACCIONES$] T
+			JOIN [PRUEBA_TUYA].[dbo].[CLIENTES$] C ON T.[IDENTIFICACION] = C.[IDENTIFICACIÓN]
+			JOIN [PRUEBA_TUYA].[dbo].[CATEGORIAS_CONSUMO$] CC ON T.[CODIGO_CATEGORIA] = CC.[CODIGO_CATEGORIA]
+			WHERE T.[FECHA_TRANSACCION] BETWEEN '2023-01-01' AND '2023-03-31'
+			GROUP BY C.[NOMBRE], C.[IDENTIFICACIÓN], C.[TIPO_DOCUMENTO], CC.[NOMBRE_CATEGORIA], T.[CODIGO_CATEGORIA]
+		)
 SELECT 
 * 
 FROM Preferencias WHERE RANKING = 1
@@ -103,19 +103,19 @@ FROM Preferencias WHERE RANKING = 1
 
 
 WITH SaldosClasificados AS (
-						SELECT 
-							h.[identificacion],
-							h.[corte_mes],
-							h.[saldo],
-							CASE 
-								WHEN h.[saldo] >= 0 AND h.[saldo] < 300000 THEN 'N0'
-								WHEN h.[saldo] >= 300000 AND h.[saldo] < 1000000 THEN 'N1'
-								WHEN h.[saldo] >= 1000000 AND h.[saldo] < 3000000 THEN 'N2'
-								WHEN h.[saldo] >= 3000000 AND h.[saldo] < 5000000 THEN 'N3'
-								WHEN h.[saldo] >= 5000000 THEN 'N4'
-							END AS nivel
-						FROM [PRUEBA_TUYA].[dbo].[historia$] h
-					)
+				SELECT 
+					h.[identificacion],
+					h.[corte_mes],
+					h.[saldo],
+					CASE 
+						WHEN h.[saldo] >= 0 AND h.[saldo] < 300000 THEN 'N0'
+						WHEN h.[saldo] >= 300000 AND h.[saldo] < 1000000 THEN 'N1'
+						WHEN h.[saldo] >= 1000000 AND h.[saldo] < 3000000 THEN 'N2'
+						WHEN h.[saldo] >= 3000000 AND h.[saldo] < 5000000 THEN 'N3'
+						WHEN h.[saldo] >= 5000000 THEN 'N4'
+					END AS nivel
+				FROM [PRUEBA_TUYA].[dbo].[historia$] h
+			)
 SELECT 
     sc.[identificacion],
     sc.[corte_mes],
