@@ -61,7 +61,7 @@ WHERE RANKING = 1
 La variable RANKING puede variar según se desee obtener las N primeras categorías preferidas en las que tuvo más transacciones
 
 
-2.3.¿Qué hace este ajuste?
+2.3. ¿Qué hace esta consulta?
 - Filtra las transacciones dentro de un rango de fechas.
 - Permite analizar preferencias de consumo dentro de un período específico.
   
