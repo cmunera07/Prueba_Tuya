@@ -9,9 +9,9 @@
 
 
  ## Tecnologías:
-![Python](https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg)
-![Google Colab](https://upload.wikimedia.org/wikipedia/commons/d/d0/Google_Colaboratory_SVG_Logo.svg)
-![SQL Server](https://upload.wikimedia.org/wikipedia/en/thumb/7/7c/Microsoft_SQL_Server_Logo.svg/1200px-Microsoft_SQL_Server_Logo.svg.png)
+<img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" width="100">
+<img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Google_Colaboratory_SVG_Logo.svg" width="100">
+<img src="https://upload.wikimedia.org/wikipedia/en/7/7c/Microsoft_SQL_Server_Logo.svg" width="100">
 
 
 
