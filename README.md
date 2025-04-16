@@ -106,18 +106,18 @@ FROM Preferencias WHERE RANKING = 1
 
 
 WITH SaldosClasificados AS (
-				SELECT 
-					h.[identificacion],
-					h.[corte_mes],
-					h.[saldo],
-					CASE 
-						WHEN h.[saldo] >= 0 AND h.[saldo] < 300000 THEN 'N0'
-						WHEN h.[saldo] >= 300000 AND h.[saldo] < 1000000 THEN 'N1'
-						WHEN h.[saldo] >= 1000000 AND h.[saldo] < 3000000 THEN 'N2'
-						WHEN h.[saldo] >= 3000000 AND h.[saldo] < 5000000 THEN 'N3'
-						WHEN h.[saldo] >= 5000000 THEN 'N4'
-					END AS nivel
-				FROM [PRUEBA_TUYA].[dbo].[historia$] h
+			SELECT 
+				h.[identificacion],
+				h.[corte_mes],
+				h.[saldo],
+				CASE 
+					WHEN h.[saldo] >= 0 AND h.[saldo] < 300000 THEN 'N0'
+					WHEN h.[saldo] >= 300000 AND h.[saldo] < 1000000 THEN 'N1'
+					WHEN h.[saldo] >= 1000000 AND h.[saldo] < 3000000 THEN 'N2'
+					WHEN h.[saldo] >= 3000000 AND h.[saldo] < 5000000 THEN 'N3'
+					WHEN h.[saldo] >= 5000000 THEN 'N4'
+				END AS nivel
+			FROM [PRUEBA_TUYA].[dbo].[historia$] h
 			)
 SELECT 
     sc.[identificacion],
@@ -141,19 +141,19 @@ WHERE (r.[fecha_retiro] IS NULL OR sc.[corte_mes] <= r.[fecha_retiro])
 
 
 WITH SaldosClasificados AS (
-					SELECT 
-						h.[identificacion],
-						h.[corte_mes],
-						h.[saldo],
-						CASE 
-							WHEN h.[saldo] >= 0 AND h.[saldo] < 300000 THEN 'N0'
-							WHEN h.[saldo] >= 300000 AND h.[saldo] < 1000000 THEN 'N1'
-							WHEN h.[saldo] >= 1000000 AND h.[saldo] < 3000000 THEN 'N2'
-							WHEN h.[saldo] >= 3000000 AND h.[saldo] < 5000000 THEN 'N3'
-							WHEN h.[saldo] >= 5000000 THEN 'N4'
-						END AS nivel
-					FROM [PRUEBA_TUYA].[dbo].[historia$] h
-							)
+			SELECT 
+				h.[identificacion],
+				h.[corte_mes],
+				h.[saldo],
+				CASE 
+					WHEN h.[saldo] >= 0 AND h.[saldo] < 300000 THEN 'N0'
+					WHEN h.[saldo] >= 300000 AND h.[saldo] < 1000000 THEN 'N1'
+					WHEN h.[saldo] >= 1000000 AND h.[saldo] < 3000000 THEN 'N2'
+					WHEN h.[saldo] >= 3000000 AND h.[saldo] < 5000000 THEN 'N3'
+					WHEN h.[saldo] >= 5000000 THEN 'N4'
+				END AS nivel
+			FROM [PRUEBA_TUYA].[dbo].[historia$] h
+			)
 	SELECT 
 		rf.[identificacion],
 		rf.[nivel],
@@ -202,19 +202,19 @@ WITH SaldosClasificados AS (
 
 
 WITH SaldosClasificados AS (
-					SELECT 
-						h.[identificacion],
-						h.[corte_mes],
-						h.[saldo],
-						CASE 
-							WHEN h.[saldo] >= 0 AND h.[saldo] < 300000 THEN 'N0'
-							WHEN h.[saldo] >= 300000 AND h.[saldo] < 1000000 THEN 'N1'
-							WHEN h.[saldo] >= 1000000 AND h.[saldo] < 3000000 THEN 'N2'
-							WHEN h.[saldo] >= 3000000 AND h.[saldo] < 5000000 THEN 'N3'
-							WHEN h.[saldo] >= 5000000 THEN 'N4'
-						END AS nivel
-					FROM [PRUEBA_TUYA].[dbo].[historia$] h
-							)
+			SELECT 
+				h.[identificacion],
+				h.[corte_mes],
+				h.[saldo],
+				CASE 
+					WHEN h.[saldo] >= 0 AND h.[saldo] < 300000 THEN 'N0'
+					WHEN h.[saldo] >= 300000 AND h.[saldo] < 1000000 THEN 'N1'
+					WHEN h.[saldo] >= 1000000 AND h.[saldo] < 3000000 THEN 'N2'
+					WHEN h.[saldo] >= 3000000 AND h.[saldo] < 5000000 THEN 'N3'
+					WHEN h.[saldo] >= 5000000 THEN 'N4'
+				END AS nivel
+			FROM [PRUEBA_TUYA].[dbo].[historia$] h
+			)
 SELECT 
 TOP 2 WITH TIES * 
 FROM (
