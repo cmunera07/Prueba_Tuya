@@ -34,7 +34,22 @@ Para testear se realizó desde Google Drive
 
 Esta función buscará archivos HTML en una lista de rutas, incluyendo directorios:
 
-
+	def obtener_archivos_html(lista_rutas):
+	    archivos_html = []
+	    
+	def obtener_archivos_html(lista_rutas):
+	    archivos_html = []
+    
+	    for ruta in lista_rutas:
+	        if os.path.isfile(ruta) and ruta.endswith(".html"):
+	            archivos_html.append(ruta)
+	        elif os.path.isdir(ruta):
+	            for raiz, _, archivos in os.walk(ruta):
+	                for archivo in archivos:
+	                    if archivo.endswith(".html"):
+	                        archivos_html.append(os.path.join(raiz, archivo))
+	                        
+	    return archivos_html
 
 
 ## Punto 2 -  Preferencias de consumo
