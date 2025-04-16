@@ -18,6 +18,23 @@
 
 ## Punto 1 - Procesamiento de archivos HTML en Python
 
+### 1.1. Importación de librerias y conexión Google Drive
+
+	from google.colab import drive
+	import os
+	import base64
+	from bs4 import BeautifulSoup
+	
+	drive.mount('/content/drive')
+
+ 
+### 1.2. Obtener archivos HTML
+
+Para testear se realizó desde Google Drive
+
+Esta función buscará archivos HTML en una lista de rutas, incluyendo directorios:
+
+
 
 
 ## Punto 2 -  Preferencias de consumo
