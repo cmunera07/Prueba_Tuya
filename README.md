@@ -1,6 +1,6 @@
-# Prueba_Tuya
+## Prueba_Tuya
 
-
+# Punto 2 -  Base BD
 /*
 ¿Qué hace esta consulta?
 - Unir las tablas TRANSACCIONES, CLIENTES y CATEGORIAS_CONSUMO.
