@@ -2,6 +2,14 @@
 ## Aspirante: Camilo Andres Munera Montoya
 
 
+##Objetivo: 
+Desarrollar prueba técnica para la convocatoria la Ingeniería de Datos
+
+
+
+
+
+
 ## Punto 1 - Procesamiento de archivos HTML en Python
 
 
