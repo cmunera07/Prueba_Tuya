@@ -89,6 +89,7 @@ FROM Preferencias WHERE RANKING = 1
 
 
 
+
 ### Punto 3 -  Rachas
 
 3.1. ¿Qué hace esta consulta?
