@@ -86,3 +86,169 @@ SELECT
 * 
 FROM Preferencias WHERE RANKING = 1
 ;
+
+
+
+### Punto 3 -  Rachas
+
+3.1. ¿Qué hace esta consulta?
+
+* TABLA TEMPORAL: SaldosClasificados
+	- Clasifica cada cliente según su nivel de saldo.
+	- Genera una columna "nivel" que define en qué categoría de deuda se encuentra cada cliente.
+	- Asegura que cada mes está representado y verifica fecha de retiro.
+	- Usa la función COALESCE() para asignar "N0" a clientes ausentes.
+	- Filtra clientes cuya fecha de retiro es anterior al corte de mes.
+
+
+WITH SaldosClasificados AS (
+						SELECT 
+							h.[identificacion],
+							h.[corte_mes],
+							h.[saldo],
+							CASE 
+								WHEN h.[saldo] >= 0 AND h.[saldo] < 300000 THEN 'N0'
+								WHEN h.[saldo] >= 300000 AND h.[saldo] < 1000000 THEN 'N1'
+								WHEN h.[saldo] >= 1000000 AND h.[saldo] < 3000000 THEN 'N2'
+								WHEN h.[saldo] >= 3000000 AND h.[saldo] < 5000000 THEN 'N3'
+								WHEN h.[saldo] >= 5000000 THEN 'N4'
+							END AS nivel
+						FROM [PRUEBA_TUYA].[dbo].[historia$] h
+					)
+SELECT 
+    sc.[identificacion],
+    sc.[corte_mes],
+    COALESCE(sc.[nivel], 'N0') AS nivel,
+    r.[fecha_retiro]
+FROM SaldosClasificados sc
+LEFT JOIN [PRUEBA_TUYA].[dbo].[retiros$] r ON sc.[identificacion] = r.[identificacion]
+WHERE (r.[fecha_retiro] IS NULL OR sc.[corte_mes] <= r.[fecha_retiro])
+;
+
+
+
+3.2. ¿Qué hace esta consulta?
+
+- Usa la función LAG() para validar si el cliente mantiene el mismo nivel que el mes anterior.
+- Usa la función DATEDIFF() para validar cuando hay un cambio de racha en los niveles.
+- Usa la SUM(rc.cambio_racha) OVER (....) para acumular el número de rachas que se dan en meses consecutivos
+- Usa la función HAVING COUNT(r.[corte_mes]) >= N para filtrar solo las rachas que cumplen con el mínimo de meses requerido.
+
+
+
+WITH SaldosClasificados AS (
+					SELECT 
+						h.[identificacion],
+						h.[corte_mes],
+						h.[saldo],
+						CASE 
+							WHEN h.[saldo] >= 0 AND h.[saldo] < 300000 THEN 'N0'
+							WHEN h.[saldo] >= 300000 AND h.[saldo] < 1000000 THEN 'N1'
+							WHEN h.[saldo] >= 1000000 AND h.[saldo] < 3000000 THEN 'N2'
+							WHEN h.[saldo] >= 3000000 AND h.[saldo] < 5000000 THEN 'N3'
+							WHEN h.[saldo] >= 5000000 THEN 'N4'
+						END AS nivel
+					FROM [PRUEBA_TUYA].[dbo].[historia$] h
+							)
+	SELECT 
+		rf.[identificacion],
+		rf.[nivel],
+		rf.[racha_id],
+		COUNT(rf.[corte_mes]) AS total_meses,
+		MAX(rf.[corte_mes]) AS fecha_fin
+	FROM
+		(
+			SELECT 
+				rc.[identificacion],
+				rc.[nivel],
+				rc.[corte_mes],
+				SUM(rc.cambio_racha) OVER (PARTITION BY rc.[identificacion], rc.[nivel] ORDER BY rc.[corte_mes]) AS racha_id
+			FROM
+				(
+				SELECT 
+					sc.[identificacion],
+					sc.[corte_mes],
+					sc.[nivel],
+					LAG(sc.[nivel]) OVER (PARTITION BY sc.[identificacion] ORDER BY sc.[corte_mes]) AS mes_anterior,
+					CASE 
+					WHEN DATEDIFF(MONTH, LAG(sc.[corte_mes]) OVER (PARTITION BY sc.[identificacion], sc.[nivel] ORDER BY sc.[corte_mes]), sc.[corte_mes]) = 1 
+					THEN 0 ELSE 1 END AS cambio_racha
+				FROM (
+						SELECT 
+							sc.[identificacion],
+							sc.[corte_mes],
+							COALESCE(sc.[nivel], 'N0') AS nivel,
+							r.[fecha_retiro]
+						FROM SaldosClasificados sc
+						LEFT JOIN [PRUEBA_TUYA].[dbo].[retiros$] r ON sc.[identificacion] = r.[identificacion]
+						WHERE (r.[fecha_retiro] IS NULL OR sc.[corte_mes] <= r.[fecha_retiro])
+					) sc
+			) rc
+		) rf
+	GROUP BY rf.[identificacion], rf.[nivel], rf.[racha_id]
+	HAVING COUNT(rf.[corte_mes]) >= 3
+;
+
+
+3.3. ¿Qué hace esta consulta?
+- Selecciona la racha más larga de un cliente.
+- Usa la función TOP N para devolver las n número de filas de acuerdo con el resultado esperado
+- Usa la función WITH TIES para incluir todas las filas que los mejores resultados de acuerdo con la función TOP N y siempre debe ir acompañada de ORDER BY
+
+
+WITH SaldosClasificados AS (
+					SELECT 
+						h.[identificacion],
+						h.[corte_mes],
+						h.[saldo],
+						CASE 
+							WHEN h.[saldo] >= 0 AND h.[saldo] < 300000 THEN 'N0'
+							WHEN h.[saldo] >= 300000 AND h.[saldo] < 1000000 THEN 'N1'
+							WHEN h.[saldo] >= 1000000 AND h.[saldo] < 3000000 THEN 'N2'
+							WHEN h.[saldo] >= 3000000 AND h.[saldo] < 5000000 THEN 'N3'
+							WHEN h.[saldo] >= 5000000 THEN 'N4'
+						END AS nivel
+					FROM [PRUEBA_TUYA].[dbo].[historia$] h
+							)
+SELECT 
+TOP 2 WITH TIES * 
+FROM (
+		SELECT 
+			rf.[identificacion],
+			rf.[nivel],
+			COUNT(rf.[corte_mes]) AS total_meses,
+			MAX(rf.[corte_mes]) AS fecha_fin
+		FROM
+			(
+				SELECT 
+					rc.[identificacion],
+					rc.[nivel],
+					rc.[corte_mes],
+					SUM(rc.cambio_racha) OVER (PARTITION BY rc.[identificacion], rc.[nivel] ORDER BY rc.[corte_mes]) AS racha_id
+				FROM
+					(
+					SELECT 
+						sc.[identificacion],
+						sc.[corte_mes],
+						sc.[nivel],
+						LAG(sc.[nivel]) OVER (PARTITION BY sc.[identificacion] ORDER BY sc.[corte_mes]) AS mes_anterior,
+						CASE 
+						WHEN DATEDIFF(MONTH, LAG(sc.[corte_mes]) OVER (PARTITION BY sc.[identificacion], sc.[nivel] ORDER BY sc.[corte_mes]), sc.[corte_mes]) = 1 
+						THEN 0 ELSE 1 END AS cambio_racha
+					FROM (
+							SELECT 
+								sc.[identificacion],
+								sc.[corte_mes],
+								COALESCE(sc.[nivel], 'N0') AS nivel,
+								r.[fecha_retiro]
+							FROM SaldosClasificados sc
+							LEFT JOIN [PRUEBA_TUYA].[dbo].[retiros$] r ON sc.[identificacion] = r.[identificacion]
+							WHERE (r.[fecha_retiro] IS NULL OR sc.[corte_mes] <= r.[fecha_retiro])
+						) sc
+				) rc
+			) rf
+		GROUP BY rf.[identificacion], rf.[nivel], rf.[racha_id]
+	) rachafinal
+--WHERE fecha_fin <= '2024-03-31'  -- Filtra por una fecha límite
+ORDER BY total_meses DESC, fecha_fin DESC
+;
