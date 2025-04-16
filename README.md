@@ -1,8 +1,9 @@
 # Prueba_Tuya
 
-### Punto 2 -  Base BD
+## Punto 2 -  Base BD
 
-## 2.1. ¿Qué hace esta consulta?
+### 2.1. ¿Qué hace esta consulta?
+
 - Une las tablas TRANSACCIONES, CLIENTES y CATEGORIAS_CONSUMO.
 - Cuenta el número total de transacciones por categoría para cada cliente.
 - Obtiene la última fecha de transacción por categoría.
@@ -29,7 +30,8 @@ C.[TIPO TARJETA], C.[FEÇHA_APERTURA_TARJETA], C.[ESTADO_TARJETA], CC.[NOMBRE_CA
 ;
 
 
-2.2. ¿Qué hace esta consulta?
+### 2.2. ¿Qué hace esta consulta?
+
 - Crea la tabla temporal Preferencias que agrupa las transacciones por cliente y categoría.
 - Usa la función COUNT() para calcular la cantidad de transacciones por categoría.
 - Usa la función MAX() para obtener la última transacción dentro de cada categoría.
@@ -61,7 +63,8 @@ WHERE RANKING = 1
 La variable RANKING puede variar según se desee obtener las N primeras categorías preferidas en las que tuvo más transacciones
 
 
-2.3. ¿Qué hace esta consulta?
+### 2.3. ¿Qué hace esta consulta?
+
 - Filtra las transacciones dentro de un rango de fechas.
 - Permite analizar preferencias de consumo dentro de un período específico.
   
@@ -92,7 +95,7 @@ FROM Preferencias WHERE RANKING = 1
 
 ### Punto 3 -  Rachas
 
-3.1. ¿Qué hace esta consulta?
+### 3.1. ¿Qué hace esta consulta?
 
 * TABLA TEMPORAL: SaldosClasificados
 	- Clasifica cada cliente según su nivel de saldo.
@@ -128,7 +131,7 @@ WHERE (r.[fecha_retiro] IS NULL OR sc.[corte_mes] <= r.[fecha_retiro])
 
 
 
-3.2. ¿Qué hace esta consulta?
+### 3.2. ¿Qué hace esta consulta?
 
 - Usa la función LAG() para validar si el cliente mantiene el mismo nivel que el mes anterior.
 - Usa la función DATEDIFF() para validar cuando hay un cambio de racha en los niveles.
@@ -191,7 +194,8 @@ WITH SaldosClasificados AS (
 ;
 
 
-3.3. ¿Qué hace esta consulta?
+### 3.3. ¿Qué hace esta consulta?
+
 - Selecciona la racha más larga de un cliente.
 - Usa la función TOP N para devolver las n número de filas de acuerdo con el resultado esperado
 - Usa la función WITH TIES para incluir todas las filas con los mejores resultados de acuerdo con la función TOP N y siempre debe ir acompañada de ORDER BY
