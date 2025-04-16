@@ -123,9 +123,9 @@ Puedes ejecutar el código en Google Colab haciendo clic en el siguiente enlace:
 
 ### 1.6. Referencias
 	
-	- Unipython. (s.f.). Analizar HTML con Python. Recuperado el 16 de abril de 2025, de https://unipython.com/analizar-html-con-python/
+	- Unipython. (s.f.). Analizar HTML con Python. Recuperado de https://unipython.com/analizar-html-con-python/
  
-	- Python-3.com. (s.f.). Cómo analizar HTML con Python. Recuperado el 16 de abril de 2025, de https://es.python-3.com/?p=971
+	- Python-3.com. (s.f.). Cómo analizar HTML con Python. Recuperado de https://es.python-3.com/?p=971
 
 ## Punto 2 -  Preferencias de consumo
 
