@@ -1,6 +1,11 @@
 # Prueba_Tuya
 
-## Punto 2 -  Base BD
+
+## Punto 1 - Procesamiento de archivos HTML en Python
+
+
+
+## Punto 2 -  Preferencias de consumo
 
 ### 2.1. ¿Qué hace esta consulta?
 
