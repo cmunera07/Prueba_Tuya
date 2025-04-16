@@ -3,7 +3,7 @@
 ### Punto 2 -  Base BD
 
 2.1. ¿Qué hace esta consulta?
-- Unir las tablas TRANSACCIONES, CLIENTES y CATEGORIAS_CONSUMO.
+- Une las tablas TRANSACCIONES, CLIENTES y CATEGORIAS_CONSUMO.
 - Cuenta el número total de transacciones por categoría para cada cliente.
 - Obtiene la última fecha de transacción por categoría.
 - Agrupa los datos por cliente y categoría.
@@ -30,10 +30,10 @@ GROUP BY C.[NOMBRE], C.[IDENTIFICACIÓN], C.[TIPO_DOCUMENTO], C.[CLASIFICACION],
 
 
 2.2. ¿Qué hace esta consulta?
-- La subconsulta Preferencias agrupa las transacciones por cliente y categoría.
-- Usa COUNT() para calcular la cantidad de transacciones por categoría.
-- Usa MAX() para obtener la última transacción dentro de cada categoría.
-- Aplica ROW_NUMBER() para asignar un ranking basado en el número de transacciones.
+- Crea la tabla temporal Preferencias que agrupa las transacciones por cliente y categoría.
+- Usa la función COUNT() para calcular la cantidad de transacciones por categoría.
+- Usa la función MAX() para obtener la última transacción dentro de cada categoría.
+- Aplica un ROW_NUMBER() para asignar un ranking basado en el número de transacciones.
 - Finalmente, filtra solo la primera categoría preferida (RANKING = 1).
 
 
@@ -64,7 +64,7 @@ La variable RANKING puede variar según se desee obtener las N primeras categor�
 2.3.¿Qué hace este ajuste?
 - Filtra las transacciones dentro de un rango de fechas.
 - Permite analizar preferencias de consumo dentro de un período específico.
-- 
+  
 
 WITH Preferencias AS (
 						SELECT 
