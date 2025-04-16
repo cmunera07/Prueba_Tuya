@@ -20,10 +20,10 @@
 
 ### 2.1. ¿Qué hace esta consulta?
 	
-#### - Une las tablas TRANSACCIONES, CLIENTES y CATEGORIAS_CONSUMO.
-	- Cuenta el número total de transacciones por categoría para cada cliente.
-	- Obtiene la última fecha de transacción por categoría.
-	- Agrupa los datos por cliente y categoría.
+- Une las tablas TRANSACCIONES, CLIENTES y CATEGORIAS_CONSUMO.
+- Cuenta el número total de transacciones por categoría para cada cliente.
+- Obtiene la última fecha de transacción por categoría.
+- Agrupa los datos por cliente y categoría.
 
 
 		SELECT 
