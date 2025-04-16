@@ -56,26 +56,26 @@
 - La variable RANKING puede variar según se desee obtener las N primeras categorías preferidas en las que tuvo más transacciones
 
 
-WITH Preferencias AS (
-			SELECT 
-				C.[NOMBRE],
-				C.[IDENTIFICACIÓN],
-				C.[TIPO_DOCUMENTO],
-				CC.[NOMBRE_CATEGORIA],
-				T.[CODIGO_CATEGORIA],
-				COUNT(T.[ID_TRANSACCION]) AS TOTAL_TRANSACCIONES,
-				MAX(T.[FECHA_TRANSACCION]) AS ULTIMA_TRANSACCION,
-				ROW_NUMBER() OVER (PARTITION BY C.[IDENTIFICACIÓN] ORDER BY COUNT(T.[ID_TRANSACCION]) DESC) AS RANKING
-			FROM [PRUEBA_TUYA].[dbo].[TRANSACCIONES$] T
-			JOIN [PRUEBA_TUYA].[dbo].[CLIENTES$] C ON T.[IDENTIFICACION] = C.[IDENTIFICACIÓN]
-			JOIN [PRUEBA_TUYA].[dbo].[CATEGORIAS_CONSUMO$] CC ON T.[CODIGO_CATEGORIA] = CC.[CODIGO_CATEGORIA]
-			GROUP BY C.[NOMBRE], C.[IDENTIFICACIÓN], C.[TIPO_DOCUMENTO], CC.[NOMBRE_CATEGORIA], T.[CODIGO_CATEGORIA]
-			)
-SELECT 
-* 
-FROM Preferencias 
-WHERE RANKING = 1
-;
+		WITH Preferencias AS (
+					SELECT 
+						C.[NOMBRE],
+						C.[IDENTIFICACIÓN],
+						C.[TIPO_DOCUMENTO],
+						CC.[NOMBRE_CATEGORIA],
+						T.[CODIGO_CATEGORIA],
+						COUNT(T.[ID_TRANSACCION]) AS TOTAL_TRANSACCIONES,
+						MAX(T.[FECHA_TRANSACCION]) AS ULTIMA_TRANSACCION,
+						ROW_NUMBER() OVER (PARTITION BY C.[IDENTIFICACIÓN] ORDER BY COUNT(T.[ID_TRANSACCION]) DESC) AS RANKING
+					FROM [PRUEBA_TUYA].[dbo].[TRANSACCIONES$] T
+					JOIN [PRUEBA_TUYA].[dbo].[CLIENTES$] C ON T.[IDENTIFICACION] = C.[IDENTIFICACIÓN]
+					JOIN [PRUEBA_TUYA].[dbo].[CATEGORIAS_CONSUMO$] CC ON T.[CODIGO_CATEGORIA] = CC.[CODIGO_CATEGORIA]
+					GROUP BY C.[NOMBRE], C.[IDENTIFICACIÓN], C.[TIPO_DOCUMENTO], CC.[NOMBRE_CATEGORIA], T.[CODIGO_CATEGORIA]
+					)
+		SELECT 
+		* 
+		FROM Preferencias 
+		WHERE RANKING = 1
+		;
 
 
 
@@ -85,26 +85,26 @@ WHERE RANKING = 1
 - Permite analizar preferencias de consumo dentro de un período específico.
   
 
-WITH Preferencias AS (
-			SELECT 
-				C.[NOMBRE],
-				C.[IDENTIFICACIÓN],
-				C.[TIPO_DOCUMENTO],
-				CC.[NOMBRE_CATEGORIA],
-				T.[CODIGO_CATEGORIA],
-				COUNT(T.[ID_TRANSACCION]) AS TOTAL_TRANSACCIONES,
-				MAX(T.[FECHA_TRANSACCION]) AS ULTIMA_TRANSACCION,
-				ROW_NUMBER() OVER (PARTITION BY C.[IDENTIFICACIÓN] ORDER BY COUNT(T.[ID_TRANSACCION]) DESC) AS RANKING
-			FROM [PRUEBA_TUYA].[dbo].[TRANSACCIONES$] T
-			JOIN [PRUEBA_TUYA].[dbo].[CLIENTES$] C ON T.[IDENTIFICACION] = C.[IDENTIFICACIÓN]
-			JOIN [PRUEBA_TUYA].[dbo].[CATEGORIAS_CONSUMO$] CC ON T.[CODIGO_CATEGORIA] = CC.[CODIGO_CATEGORIA]
-			WHERE T.[FECHA_TRANSACCION] BETWEEN '2023-01-01' AND '2023-03-31'
-			GROUP BY C.[NOMBRE], C.[IDENTIFICACIÓN], C.[TIPO_DOCUMENTO], CC.[NOMBRE_CATEGORIA], T.[CODIGO_CATEGORIA]
-		)
-SELECT 
-* 
-FROM Preferencias WHERE RANKING = 1
-;
+		WITH Preferencias AS (
+					SELECT 
+						C.[NOMBRE],
+						C.[IDENTIFICACIÓN],
+						C.[TIPO_DOCUMENTO],
+						CC.[NOMBRE_CATEGORIA],
+						T.[CODIGO_CATEGORIA],
+						COUNT(T.[ID_TRANSACCION]) AS TOTAL_TRANSACCIONES,
+						MAX(T.[FECHA_TRANSACCION]) AS ULTIMA_TRANSACCION,
+						ROW_NUMBER() OVER (PARTITION BY C.[IDENTIFICACIÓN] ORDER BY COUNT(T.[ID_TRANSACCION]) DESC) AS RANKING
+					FROM [PRUEBA_TUYA].[dbo].[TRANSACCIONES$] T
+					JOIN [PRUEBA_TUYA].[dbo].[CLIENTES$] C ON T.[IDENTIFICACION] = C.[IDENTIFICACIÓN]
+					JOIN [PRUEBA_TUYA].[dbo].[CATEGORIAS_CONSUMO$] CC ON T.[CODIGO_CATEGORIA] = CC.[CODIGO_CATEGORIA]
+					WHERE T.[FECHA_TRANSACCION] BETWEEN '2023-01-01' AND '2023-03-31'
+					GROUP BY C.[NOMBRE], C.[IDENTIFICACIÓN], C.[TIPO_DOCUMENTO], CC.[NOMBRE_CATEGORIA], T.[CODIGO_CATEGORIA]
+				)
+		SELECT 
+		* 
+		FROM Preferencias WHERE RANKING = 1
+		;
 
 
 
@@ -121,29 +121,29 @@ FROM Preferencias WHERE RANKING = 1
 	- Filtra clientes cuya fecha de retiro es anterior al corte de mes.
 
 
-WITH SaldosClasificados AS (
+			WITH SaldosClasificados AS (
+						SELECT 
+							h.[identificacion],
+							h.[corte_mes],
+							h.[saldo],
+							CASE 
+								WHEN h.[saldo] >= 0 AND h.[saldo] < 300000 THEN 'N0'
+								WHEN h.[saldo] >= 300000 AND h.[saldo] < 1000000 THEN 'N1'
+								WHEN h.[saldo] >= 1000000 AND h.[saldo] < 3000000 THEN 'N2'
+								WHEN h.[saldo] >= 3000000 AND h.[saldo] < 5000000 THEN 'N3'
+								WHEN h.[saldo] >= 5000000 THEN 'N4'
+							END AS nivel
+						FROM [PRUEBA_TUYA].[dbo].[historia$] h
+						)
 			SELECT 
-				h.[identificacion],
-				h.[corte_mes],
-				h.[saldo],
-				CASE 
-					WHEN h.[saldo] >= 0 AND h.[saldo] < 300000 THEN 'N0'
-					WHEN h.[saldo] >= 300000 AND h.[saldo] < 1000000 THEN 'N1'
-					WHEN h.[saldo] >= 1000000 AND h.[saldo] < 3000000 THEN 'N2'
-					WHEN h.[saldo] >= 3000000 AND h.[saldo] < 5000000 THEN 'N3'
-					WHEN h.[saldo] >= 5000000 THEN 'N4'
-				END AS nivel
-			FROM [PRUEBA_TUYA].[dbo].[historia$] h
-			)
-SELECT 
-    sc.[identificacion],
-    sc.[corte_mes],
-    COALESCE(sc.[nivel], 'N0') AS nivel,
-    r.[fecha_retiro]
-FROM SaldosClasificados sc
-LEFT JOIN [PRUEBA_TUYA].[dbo].[retiros$] r ON sc.[identificacion] = r.[identificacion]
-WHERE (r.[fecha_retiro] IS NULL OR sc.[corte_mes] <= r.[fecha_retiro])
-;
+			    sc.[identificacion],
+			    sc.[corte_mes],
+			    COALESCE(sc.[nivel], 'N0') AS nivel,
+			    r.[fecha_retiro]
+			FROM SaldosClasificados sc
+			LEFT JOIN [PRUEBA_TUYA].[dbo].[retiros$] r ON sc.[identificacion] = r.[identificacion]
+			WHERE (r.[fecha_retiro] IS NULL OR sc.[corte_mes] <= r.[fecha_retiro])
+			;
 
 
 
@@ -156,58 +156,58 @@ WHERE (r.[fecha_retiro] IS NULL OR sc.[corte_mes] <= r.[fecha_retiro])
 
 
 
-WITH SaldosClasificados AS (
+		WITH SaldosClasificados AS (
+					SELECT 
+						h.[identificacion],
+						h.[corte_mes],
+						h.[saldo],
+						CASE 
+							WHEN h.[saldo] >= 0 AND h.[saldo] < 300000 THEN 'N0'
+							WHEN h.[saldo] >= 300000 AND h.[saldo] < 1000000 THEN 'N1'
+							WHEN h.[saldo] >= 1000000 AND h.[saldo] < 3000000 THEN 'N2'
+							WHEN h.[saldo] >= 3000000 AND h.[saldo] < 5000000 THEN 'N3'
+							WHEN h.[saldo] >= 5000000 THEN 'N4'
+						END AS nivel
+					FROM [PRUEBA_TUYA].[dbo].[historia$] h
+					)
 			SELECT 
-				h.[identificacion],
-				h.[corte_mes],
-				h.[saldo],
-				CASE 
-					WHEN h.[saldo] >= 0 AND h.[saldo] < 300000 THEN 'N0'
-					WHEN h.[saldo] >= 300000 AND h.[saldo] < 1000000 THEN 'N1'
-					WHEN h.[saldo] >= 1000000 AND h.[saldo] < 3000000 THEN 'N2'
-					WHEN h.[saldo] >= 3000000 AND h.[saldo] < 5000000 THEN 'N3'
-					WHEN h.[saldo] >= 5000000 THEN 'N4'
-				END AS nivel
-			FROM [PRUEBA_TUYA].[dbo].[historia$] h
-			)
-	SELECT 
-		rf.[identificacion],
-		rf.[nivel],
-		rf.[racha_id],
-		COUNT(rf.[corte_mes]) AS total_meses,
-		MAX(rf.[corte_mes]) AS fecha_fin
-	FROM
-		(
-			SELECT 
-				rc.[identificacion],
-				rc.[nivel],
-				rc.[corte_mes],
-				SUM(rc.cambio_racha) OVER (PARTITION BY rc.[identificacion], rc.[nivel] ORDER BY rc.[corte_mes]) AS racha_id
+				rf.[identificacion],
+				rf.[nivel],
+				rf.[racha_id],
+				COUNT(rf.[corte_mes]) AS total_meses,
+				MAX(rf.[corte_mes]) AS fecha_fin
 			FROM
 				(
-				SELECT 
-					sc.[identificacion],
-					sc.[corte_mes],
-					sc.[nivel],
-					LAG(sc.[nivel]) OVER (PARTITION BY sc.[identificacion] ORDER BY sc.[corte_mes]) AS mes_anterior,
-					CASE 
-					WHEN DATEDIFF(MONTH, LAG(sc.[corte_mes]) OVER (PARTITION BY sc.[identificacion], sc.[nivel] ORDER BY sc.[corte_mes]), sc.[corte_mes]) = 1 
-					THEN 0 ELSE 1 END AS cambio_racha
-				FROM (
+					SELECT 
+						rc.[identificacion],
+						rc.[nivel],
+						rc.[corte_mes],
+						SUM(rc.cambio_racha) OVER (PARTITION BY rc.[identificacion], rc.[nivel] ORDER BY rc.[corte_mes]) AS racha_id
+					FROM
+						(
 						SELECT 
 							sc.[identificacion],
 							sc.[corte_mes],
-							COALESCE(sc.[nivel], 'N0') AS nivel,
-							r.[fecha_retiro]
-						FROM SaldosClasificados sc
-						LEFT JOIN [PRUEBA_TUYA].[dbo].[retiros$] r ON sc.[identificacion] = r.[identificacion]
-						WHERE (r.[fecha_retiro] IS NULL OR sc.[corte_mes] <= r.[fecha_retiro])
-					) sc
-			) rc
-		) rf
-	GROUP BY rf.[identificacion], rf.[nivel], rf.[racha_id]
-	HAVING COUNT(rf.[corte_mes]) >= 3
-;
+							sc.[nivel],
+							LAG(sc.[nivel]) OVER (PARTITION BY sc.[identificacion] ORDER BY sc.[corte_mes]) AS mes_anterior,
+							CASE 
+							WHEN DATEDIFF(MONTH, LAG(sc.[corte_mes]) OVER (PARTITION BY sc.[identificacion], sc.[nivel] ORDER BY sc.[corte_mes]), sc.[corte_mes]) = 1 
+							THEN 0 ELSE 1 END AS cambio_racha
+						FROM (
+								SELECT 
+									sc.[identificacion],
+									sc.[corte_mes],
+									COALESCE(sc.[nivel], 'N0') AS nivel,
+									r.[fecha_retiro]
+								FROM SaldosClasificados sc
+								LEFT JOIN [PRUEBA_TUYA].[dbo].[retiros$] r ON sc.[identificacion] = r.[identificacion]
+								WHERE (r.[fecha_retiro] IS NULL OR sc.[corte_mes] <= r.[fecha_retiro])
+							) sc
+					) rc
+				) rf
+			GROUP BY rf.[identificacion], rf.[nivel], rf.[racha_id]
+			HAVING COUNT(rf.[corte_mes]) >= 3
+		;
 
 
 ### 3.3. ¿Qué hace esta consulta?
@@ -217,59 +217,59 @@ WITH SaldosClasificados AS (
 - Usa la función WITH TIES para incluir todas las filas con los mejores resultados de acuerdo con la función TOP N y siempre debe ir acompañada de ORDER BY
 
 
-WITH SaldosClasificados AS (
-			SELECT 
-				h.[identificacion],
-				h.[corte_mes],
-				h.[saldo],
-				CASE 
-					WHEN h.[saldo] >= 0 AND h.[saldo] < 300000 THEN 'N0'
-					WHEN h.[saldo] >= 300000 AND h.[saldo] < 1000000 THEN 'N1'
-					WHEN h.[saldo] >= 1000000 AND h.[saldo] < 3000000 THEN 'N2'
-					WHEN h.[saldo] >= 3000000 AND h.[saldo] < 5000000 THEN 'N3'
-					WHEN h.[saldo] >= 5000000 THEN 'N4'
-				END AS nivel
-			FROM [PRUEBA_TUYA].[dbo].[historia$] h
-			)
-SELECT 
-TOP 2 WITH TIES * 
-FROM (
+		WITH SaldosClasificados AS (
+					SELECT 
+						h.[identificacion],
+						h.[corte_mes],
+						h.[saldo],
+						CASE 
+							WHEN h.[saldo] >= 0 AND h.[saldo] < 300000 THEN 'N0'
+							WHEN h.[saldo] >= 300000 AND h.[saldo] < 1000000 THEN 'N1'
+							WHEN h.[saldo] >= 1000000 AND h.[saldo] < 3000000 THEN 'N2'
+							WHEN h.[saldo] >= 3000000 AND h.[saldo] < 5000000 THEN 'N3'
+							WHEN h.[saldo] >= 5000000 THEN 'N4'
+						END AS nivel
+					FROM [PRUEBA_TUYA].[dbo].[historia$] h
+					)
 		SELECT 
-			rf.[identificacion],
-			rf.[nivel],
-			COUNT(rf.[corte_mes]) AS total_meses,
-			MAX(rf.[corte_mes]) AS fecha_fin
-		FROM
-			(
+		TOP 2 WITH TIES * 
+		FROM (
 				SELECT 
-					rc.[identificacion],
-					rc.[nivel],
-					rc.[corte_mes],
-					SUM(rc.cambio_racha) OVER (PARTITION BY rc.[identificacion], rc.[nivel] ORDER BY rc.[corte_mes]) AS racha_id
+					rf.[identificacion],
+					rf.[nivel],
+					COUNT(rf.[corte_mes]) AS total_meses,
+					MAX(rf.[corte_mes]) AS fecha_fin
 				FROM
 					(
-					SELECT 
-						sc.[identificacion],
-						sc.[corte_mes],
-						sc.[nivel],
-						LAG(sc.[nivel]) OVER (PARTITION BY sc.[identificacion] ORDER BY sc.[corte_mes]) AS mes_anterior,
-						CASE 
-						WHEN DATEDIFF(MONTH, LAG(sc.[corte_mes]) OVER (PARTITION BY sc.[identificacion], sc.[nivel] ORDER BY sc.[corte_mes]), sc.[corte_mes]) = 1 
-						THEN 0 ELSE 1 END AS cambio_racha
-					FROM (
+						SELECT 
+							rc.[identificacion],
+							rc.[nivel],
+							rc.[corte_mes],
+							SUM(rc.cambio_racha) OVER (PARTITION BY rc.[identificacion], rc.[nivel] ORDER BY rc.[corte_mes]) AS racha_id
+						FROM
+							(
 							SELECT 
 								sc.[identificacion],
 								sc.[corte_mes],
-								COALESCE(sc.[nivel], 'N0') AS nivel,
-								r.[fecha_retiro]
-							FROM SaldosClasificados sc
-							LEFT JOIN [PRUEBA_TUYA].[dbo].[retiros$] r ON sc.[identificacion] = r.[identificacion]
-							WHERE (r.[fecha_retiro] IS NULL OR sc.[corte_mes] <= r.[fecha_retiro])
-						) sc
-				) rc
-			) rf
-		GROUP BY rf.[identificacion], rf.[nivel], rf.[racha_id]
-	) rachafinal
---WHERE fecha_fin <= '2024-03-31'  -- Filtra por una fecha límite
-ORDER BY total_meses DESC, fecha_fin DESC
-;
+								sc.[nivel],
+								LAG(sc.[nivel]) OVER (PARTITION BY sc.[identificacion] ORDER BY sc.[corte_mes]) AS mes_anterior,
+								CASE 
+								WHEN DATEDIFF(MONTH, LAG(sc.[corte_mes]) OVER (PARTITION BY sc.[identificacion], sc.[nivel] ORDER BY sc.[corte_mes]), sc.[corte_mes]) = 1 
+								THEN 0 ELSE 1 END AS cambio_racha
+							FROM (
+									SELECT 
+										sc.[identificacion],
+										sc.[corte_mes],
+										COALESCE(sc.[nivel], 'N0') AS nivel,
+										r.[fecha_retiro]
+									FROM SaldosClasificados sc
+									LEFT JOIN [PRUEBA_TUYA].[dbo].[retiros$] r ON sc.[identificacion] = r.[identificacion]
+									WHERE (r.[fecha_retiro] IS NULL OR sc.[corte_mes] <= r.[fecha_retiro])
+								) sc
+						) rc
+					) rf
+				GROUP BY rf.[identificacion], rf.[nivel], rf.[racha_id]
+			) rachafinal
+		--WHERE fecha_fin <= '2024-03-31'  -- Filtra por una fecha límite
+		ORDER BY total_meses DESC, fecha_fin DESC
+		;
