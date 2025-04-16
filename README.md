@@ -2,7 +2,7 @@
 
 ### Punto 2 -  Base BD
 
-2.1. ¿Qué hace esta consulta?
+##2.1. ¿Qué hace esta consulta?
 - Une las tablas TRANSACCIONES, CLIENTES y CATEGORIAS_CONSUMO.
 - Cuenta el número total de transacciones por categoría para cada cliente.
 - Obtiene la última fecha de transacción por categoría.
