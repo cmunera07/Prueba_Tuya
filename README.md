@@ -121,6 +121,12 @@ Puedes ejecutar el código en Google Colab haciendo clic en el siguiente enlace:
 		print("\nImágenes con errores:")
 		print(resultado["fail"])
 
+### 1.6. Referencias
+
+	- https://unipython.com/analizar-html-con-python/
+	
+	- https://es.python-3.com/?p=971
+
 
 
 ## Punto 2 -  Preferencias de consumo
