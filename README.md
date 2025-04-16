@@ -30,26 +30,93 @@
  
 ### 1.2. Obtener archivos HTML
 
-Para testear se realizó desde Google Drive
+- Para testear se realizó desde Google Drive
+- Esta función buscará archivos HTML en una lista de rutas, incluyendo directorios:
 
-Esta función buscará archivos HTML en una lista de rutas, incluyendo directorios:
-
-	def obtener_archivos_html(lista_rutas):
-	    archivos_html = []
-	    
-	def obtener_archivos_html(lista_rutas):
-	    archivos_html = []
+		def obtener_archivos_html(lista_rutas):
+		    archivos_html = []
+		    
+		def obtener_archivos_html(lista_rutas):
+		    archivos_html = []
     
-	    for ruta in lista_rutas:
-	        if os.path.isfile(ruta) and ruta.endswith(".html"):
-	            archivos_html.append(ruta)
-	        elif os.path.isdir(ruta):
-	            for raiz, _, archivos in os.walk(ruta):
-	                for archivo in archivos:
-	                    if archivo.endswith(".html"):
-	                        archivos_html.append(os.path.join(raiz, archivo))
-	                        
-	    return archivos_html
+		    for ruta in lista_rutas:
+		        if os.path.isfile(ruta) and ruta.endswith(".html"):
+		            archivos_html.append(ruta)
+		        elif os.path.isdir(ruta):
+		            for raiz, _, archivos in os.walk(ruta):
+		                for archivo in archivos:
+		                    if archivo.endswith(".html"):
+		                        archivos_html.append(os.path.join(raiz, archivo))
+		                        
+		    return archivos_html
+
+
+### 1.3. Convertir imágenes a Base64
+
+- Este paso convierte cualquier imagen en formato Base64:
+
+		def convertir_imagen_a_base64(ruta_imagen):
+		    try:
+		        with open(ruta_imagen, "rb") as imagen:
+		            codificacion = base64.b64encode(imagen.read()).decode('utf-8')
+		        return f"data:image/{ruta_imagen.split('.')[-1]};base64,{codificacion}"
+		    except Exception as e:
+		        print(f"Error procesando la imagen {ruta_imagen}: {e}")
+		        return None
+
+### 1.4. Procesar archivos HTML y reemplazar imágenes
+
+- Aquí leemos el HTML, buscamos <img>, convertimos las imágenes a Base64 y generamos un nuevo archivo HTML con imágenes:
+
+	  def procesar_html_en_memoria(html_content):
+	    resultado = {"success": {}, "fail": {}}
+	    soup = BeautifulSoup(html_content, "html.parser")
+	    imagenes = soup.find_all("img")
+	
+	    for img in imagenes:
+	        ruta_imagen = img.get("src")
+	        
+	        if ruta_imagen and os.path.exists(ruta_imagen):
+	            nueva_imagen_base64 = convertir_imagen_a_base64(ruta_imagen)
+	            if nueva_imagen_base64:
+	                img["src"] = nueva_imagen_base64
+	                resultado["success"][ruta_imagen] = nueva_imagen_base64
+	            else:
+	                resultado["fail"][ruta_imagen] = "Error en conversión"
+	        else:
+	            resultado["fail"][ruta_imagen] = "Imagen no encontrada"
+	
+	    return str(soup), resultado
+
+### 1.5. Procesar archivos - Test
+
+- Se testea con un archivo temporal para procesar el HTML directamente desde la memoria sin abrir archivos.
+
+		html_test = """
+		<html>
+		    <body>
+		        <!-- Imagen válida en Google Drive -->
+		        <img src="/content/drive/MyDrive/Uniminuto/20240324_155849.jpg" alt="Imagen válida">
+		        
+		        <!-- Imagen con ruta incorrecta (debe fallar) -->
+		        <img src="/content/drive/MyDrive/Uniminuto/imagen_inexistente.jpg" alt="Imagen errónea">
+		    </body>
+		</html>
+		"""
+		
+		# Ejecutamos la prueba con el HTML simulado
+		nuevo_html, resultado = procesar_html_en_memoria(html_test)
+		
+		# Mostramos el nuevo HTML con imágenes en Base64
+		print("Nuevo HTML generado:\n")
+		print(nuevo_html)
+		
+		print("\nImágenes procesadas exitosamente:")
+		print(resultado["success"])
+		
+		print("\nImágenes con errores:")
+		print(resultado["fail"])
+
 
 
 ## Punto 2 -  Preferencias de consumo
